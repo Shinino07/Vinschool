@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pressure and Moments</title>
+<meta name="description" content="Pressure on solids (P = F ÷ A) and moments on a seesaw (M = F × d): pictures you can play with and a 4-step method for each.">
+<meta property="og:title" content="Pressure & Moments · Áp suất & Mômen lực">
+<meta property="og:description" content="P = F ÷ A and M = F × d, explained with a brick on a sponge and a seesaw.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 15 L9 29 L23 29 Z' fill='%2317202c'/%3E%3Crect x='2' y='10' width='28' height='4.5' rx='2.2' fill='%237a3cd0'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: graph-paper workbook. Each topic = formula → picture you can play with → 4-step flow → traps. Colour = variable (F red, A blue, d green, answer purple). */
+  --paper:#f2f5f9; --grid:#e0e6ee; --card:#ffffff; --ink:#17202c; --muted:#5b6778; --line:#cdd6e1;
+  --f:#d63d27; --a:#2160d4; --d:#11875a; --out:#7a3cd0;
+  --block:#8c98a9; --sponge:#f0c44c; --kid:#4a5a70; --warn:#b4531a;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Lexend","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#10151c; --grid:#19212b; --card:#17202a; --ink:#e6ecf4; --muted:#9aa7b8; --line:#2c3746;
+    --f:#ff7458; --a:#6b9fff; --d:#3ccf90; --out:#b58aff;
+    --block:#7a879a; --sponge:#c39d3b; --kid:#9db0c8; --warn:#f0a062;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#10151c; --grid:#19212b; --card:#17202a; --ink:#e6ecf4; --muted:#9aa7b8; --line:#2c3746;
+  --f:#ff7458; --a:#6b9fff; --d:#3ccf90; --out:#b58aff;
+  --block:#7a879a; --sponge:#c39d3b; --kid:#9db0c8; --warn:#f0a062;
+  color-scheme:dark;
+}
+
+html[lang="en"] .vi, html[lang="vi"] .en{display:none !important}
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:var(--body); color:var(--ink); line-height:1.45;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+main{max-width:1080px; margin:0 auto; padding:28px 20px 56px; display:grid; gap:44px}
+h1,h2,h3{font-family:var(--display); text-wrap:balance; margin:0; line-height:1.05}
+svg{max-width:100%; height:auto; display:block}
+button{font:inherit; color:inherit; cursor:pointer}
+:focus-visible{outline:3px solid var(--a); outline-offset:2px; border-radius:6px}
+
+.c-f{color:var(--f)} .c-a{color:var(--a)} .c-d{color:var(--d)} .c-out{color:var(--out)}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+.top{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-start; gap:16px}
+.top h1{font-size:clamp(2.1rem,5.5vw,3.3rem); font-weight:800}
+.back{display:inline-block; margin-bottom:6px; color:var(--muted); text-decoration:none; font-weight:500}
+.back:hover{color:var(--ink)}
+.key{list-style:none; margin:12px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:8px}
+.key li{display:flex; align-items:center; gap:6px; background:var(--card); border:1.5px solid var(--line); border-radius:999px; padding:3px 12px 3px 10px; font-size:.9rem; color:var(--muted)}
+.key b{font-family:var(--display); font-size:1.15rem; font-weight:800}
+.lang{display:flex; border:2px solid var(--ink); border-radius:10px; overflow:hidden}
+.lang button{border:0; background:var(--card); padding:6px 14px; font-weight:600}
+.lang button[aria-pressed="true"]{background:var(--ink); color:var(--paper)}
+
+/* picker */
+.pick{display:grid; gap:12px}
+.pick-q{font-size:1.35rem; font-weight:600; color:var(--muted)}
+.pick-row{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.pick-card{display:grid; grid-template-columns:120px 1fr; align-items:center; gap:4px 16px; padding:14px 18px; background:var(--card); border:2px solid var(--line); border-radius:14px; color:inherit; text-decoration:none; transition:border-color .15s}
+.pick-card:hover{border-color:var(--ink)}
+.pick-card svg{grid-row:span 2; color:var(--ink)}
+.pick-card .what{font-weight:500; color:var(--muted); align-self:end}
+.pick-card .eq{font-family:var(--display); font-weight:800; font-size:2rem; line-height:1; align-self:start}
+
+/* topic */
+.topic{display:grid; gap:22px; scroll-margin-top:16px}
+.topic-head{display:flex; align-items:center; gap:14px; border-bottom:3px solid var(--ink); padding-bottom:10px}
+.topic-head .n{display:grid; place-items:center; width:46px; height:46px; border-radius:50%; background:var(--ink); color:var(--paper); font-family:var(--display); font-weight:800; font-size:1.6rem}
+.topic-head h2{font-size:clamp(1.6rem,4vw,2.3rem); font-weight:800}
+
+.formula-row{display:grid; grid-template-columns:auto 1fr; gap:20px 48px; align-items:center}
+.formula{font-family:var(--display); font-weight:800; font-size:clamp(3.4rem,9vw,5rem); line-height:1; display:inline-flex; align-items:center; gap:.22em}
+.formula .op{color:var(--muted); font-weight:600}
+.frac{display:inline-flex; flex-direction:column; align-items:center; gap:.04em}
+.frac .bar{display:block; width:1.2em; height:.07em; background:var(--ink); border-radius:2px}
+.legend{margin:0; display:grid; gap:8px; max-width:440px}
+.legend div{display:grid; grid-template-columns:2rem 1fr auto; align-items:center; gap:10px; border-bottom:1px dashed var(--line); padding-bottom:6px}
+.legend dt{font-family:var(--display); font-weight:800; font-size:1.6rem; line-height:1}
+.legend dd{margin:0}
+.legend .unit{font-weight:600; background:var(--card); border:1.5px solid var(--line); border-radius:8px; padding:1px 10px; white-space:nowrap}
+
+/* hands-on boxes */
+.lab{background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:18px; display:grid; grid-template-columns:1.45fr 1fr; gap:18px; align-items:center}
+.lab figure{margin:0}
+.lab figcaption{font-size:.92rem; color:var(--muted); margin-top:6px}
+.lab-side{display:grid; gap:14px}
+.seg{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+.seg button{display:grid; justify-items:center; gap:2px; padding:8px 6px 6px; border:2px solid var(--line); border-radius:12px; background:var(--paper); font-weight:600; font-size:.9rem}
+.seg button svg{width:54px}
+.seg button[aria-pressed="true"]{border-color:var(--a); background:color-mix(in srgb,var(--a) 10%,var(--card))}
+.read{display:grid; gap:6px; font-variant-numeric:tabular-nums; font-size:1.05rem}
+.read .r b{font-weight:600}
+.read small{color:var(--muted); font-size:.82rem}
+.read .big{font-size:1.3rem}
+.read .big b{color:var(--out); font-weight:800; font-family:var(--display); font-size:1.7rem}
+.meter{height:12px; border-radius:6px; background:var(--paper); border:1.5px solid var(--line); overflow:hidden}
+.meter span{display:block; height:100%; width:25%; background:var(--out); transition:width .35s ease}
+.rule{margin:0; font-family:var(--display); font-weight:800; font-size:2rem; line-height:1}
+#foot{width:150px}
+
+/* flow */
+.flow-head{display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 16px}
+.flow-head h3{font-size:1.5rem; font-weight:800}
+.flow-head .eg{color:var(--muted); font-variant-numeric:tabular-nums}
+.flow-head .eg b{color:var(--ink); font-weight:600}
+.flow{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(4,1fr); gap:30px}
+.step{position:relative; display:grid; gap:6px; align-content:start; background:var(--card); border:1.5px solid var(--line); border-top:6px solid var(--sc,var(--ink)); border-radius:12px; padding:12px 14px 12px}
+.step:not(:last-child)::after{content:"→"; position:absolute; right:-25px; top:42%; font-size:1.5rem; font-weight:600; color:var(--muted)}
+.step .top-l{display:flex; align-items:center; gap:8px; font-weight:600; font-size:.95rem}
+.badge{display:grid; place-items:center; width:26px; height:26px; border-radius:50%; background:var(--sc,var(--ink)); color:var(--card); font-family:var(--display); font-weight:800; font-size:1rem}
+.step .do{font-family:var(--display); font-weight:800; font-size:1.45rem; line-height:1.15}
+.step .ex{border-top:1px dashed var(--line); padding-top:6px; color:var(--muted); font-variant-numeric:tabular-nums}
+.step .ex b{color:var(--ink); font-weight:600}
+.s-f{--sc:var(--f)} .s-a{--sc:var(--a)} .s-d{--sc:var(--d)} .s-out{--sc:var(--out)} .s-ink{--sc:var(--ink)}
+.try{justify-self:start; margin-top:4px; border:2px solid var(--out); background:transparent; color:var(--out); border-radius:999px; padding:3px 12px; font-weight:600; font-size:.88rem}
+.try:hover{background:color-mix(in srgb,var(--out) 12%,transparent)}
+
+/* traps + life */
+.traps{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:10px}
+.traps li{display:flex; align-items:center; gap:8px; border:1.5px dashed var(--warn); border-radius:999px; padding:5px 14px 5px 6px; background:var(--card); font-variant-numeric:tabular-nums}
+.bang{display:grid; place-items:center; width:22px; height:22px; border-radius:50%; background:var(--warn); color:var(--card); font-weight:800; font-size:.85rem}
+.life{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.life-col{display:grid; gap:10px; padding:12px 16px; border-left:5px solid var(--line)}
+.life-col h4{margin:0; font-family:var(--display); font-weight:800; font-size:1.35rem; line-height:1}
+.life-col ul{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:16px}
+.life-col li{display:grid; justify-items:center; gap:2px; font-size:.85rem; color:var(--muted); width:72px; text-align:center}
+.life-col li svg{width:52px; color:var(--ink)}
+
+/* moments */
+.law{justify-self:center; display:grid; justify-items:center; gap:6px; padding:14px 26px 16px; border:2.5px solid var(--ink); border-radius:18px; background:var(--card)}
+.law .tag{font-weight:600; color:var(--muted)}
+.law-eq{display:flex; align-items:center; gap:20px}
+.law-eq .side{display:grid; justify-items:center; gap:2px}
+.law-eq .sig{display:flex; align-items:center; font-family:var(--display); font-weight:800; font-size:2.2rem; line-height:1; color:var(--out)}
+.law-eq .sig svg{width:46px}
+.law-eq small{color:var(--muted); font-size:.8rem}
+.law-eq .op{font-family:var(--display); font-weight:800; font-size:2.6rem}
+.law .eq2{font-family:var(--display); font-weight:800; font-size:1.5rem}
+.law sub{font-size:.6em}
+
+.lab.wide{grid-template-columns:1fr}
+#seesaw-svg{width:100%; max-width:720px; margin:0 auto}
+.lab.wide figcaption{text-align:center}
+.ctrl{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.ctrl fieldset{margin:0; border:1.5px solid var(--line); border-radius:12px; padding:8px 14px 12px; display:grid; grid-template-columns:auto 1fr; gap:6px 12px; align-items:center}
+.ctrl legend{font-weight:600; padding:0 6px}
+.ctrl label{font-variant-numeric:tabular-nums; white-space:nowrap; min-width:7.2em}
+.ctrl label b{font-family:var(--display); font-weight:800; font-size:1.2rem}
+.ctrl input[type=range]{width:100%}
+.rF{accent-color:var(--f)} .rd{accent-color:var(--d)}
+.eqrow{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; font-variant-numeric:tabular-nums; font-size:1.1rem}
+.mside{display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap}
+.mside svg{width:30px; color:var(--out)}
+.mside b{color:var(--out); font-family:var(--display); font-weight:800; font-size:1.5rem}
+.cmp{font-family:var(--display); font-weight:800; font-size:2.6rem; line-height:1; min-width:1.2em; text-align:center}
+.status{justify-self:center; margin:0; padding:5px 18px; border-radius:999px; font-weight:600; border:2px solid var(--ink)}
+.status.ok{background:var(--ink); color:var(--paper)}
+
+/* seesaw + brick drawing classes */
+.sp-top{fill:var(--sponge)}
+.sp-right{fill:color-mix(in srgb,var(--sponge) 74%,#000)}
+.sp-front{fill:color-mix(in srgb,var(--sponge) 86%,#000)}
+.sp-dot{fill:#000; opacity:.13}
+.dent{fill:#000}
+.bf-front{fill:var(--block); stroke:var(--ink); stroke-width:1.2; stroke-linejoin:round}
+.bf-top{fill:color-mix(in srgb,var(--block) 68%,#fff); stroke:var(--ink); stroke-width:1.2; stroke-linejoin:round}
+.bf-right{fill:color-mix(in srgb,var(--block) 76%,#000); stroke:var(--ink); stroke-width:1.2; stroke-linejoin:round}
+.rim{fill:none; stroke:var(--a); stroke-width:4; stroke-linecap:round; stroke-linejoin:round}
+.fa{stroke:var(--f); stroke-width:4; stroke-linecap:round}
+.fh{fill:var(--f)}
+.ft{fill:var(--f); font-family:var(--body); font-weight:600; font-size:15px}
+.ground{stroke:var(--line); stroke-width:3}
+.pivot{fill:var(--ink)}
+.beam{stroke:color-mix(in srgb,var(--block) 70%,var(--ink)); stroke-width:12; stroke-linecap:round}
+.pdot{fill:var(--paper)}
+.kbody,.khead{fill:var(--kid)}
+.kname{fill:var(--muted); font-family:var(--body); font-weight:600; font-size:13px; text-anchor:middle}
+.dl{stroke:var(--d); stroke-width:2.5; stroke-linecap:round}
+.dt{fill:var(--d); font-family:var(--body); font-weight:600; font-size:13px; text-anchor:middle}
+.foot-a{fill:color-mix(in srgb,var(--a) 22%,transparent); stroke:var(--a); stroke-width:2.5}
+.foot-t{fill:var(--muted); font-family:var(--body); font-size:11px; text-anchor:middle}
+.foot-A{fill:var(--a); font-family:var(--display); font-weight:800; font-size:18px; text-anchor:middle}
+.ft,.dt,.kname{paint-order:stroke; stroke:var(--card); stroke-width:4px; stroke-linejoin:round}
+
+footer{color:var(--muted); font-size:.9rem; font-variant-numeric:tabular-nums; display:flex; flex-wrap:wrap; gap:6px 22px; border-top:1.5px solid var(--line); padding-top:12px}
+
+@media (max-width:780px){
+  .pick-row,.formula-row,.lab,.life,.ctrl{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr; gap:30px}
+  .step:not(:last-child)::after{content:"↓"; right:auto; left:50%; top:auto; bottom:-30px; transform:translateX(-50%)}
+  .eqrow{font-size:.95rem}
+  .law{padding:12px 16px}
+  .law-eq{gap:12px}
+}
+@media (max-width:600px){
+  /* drawings shrink on phones, so their labels get bigger */
+  .ft{font-size:24px} .dt{font-size:22px} .kname{font-size:22px}
+  .lab{padding:12px}
+}
+@media (max-width:420px){
+  .pick-card{grid-template-columns:84px 1fr}
+  .eqrow{grid-template-columns:1fr; justify-items:center}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important; scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="ccw" viewBox="0 0 24 24">
+    <path d="M6.34 6.34 A8 8 0 1 0 17.66 6.34" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M18.1 11.3 L17.66 6.34 L22.6 6.8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="cw" viewBox="0 0 24 24">
+    <path d="M17.66 6.34 A8 8 0 1 1 6.34 6.34" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M5.9 11.3 L6.34 6.34 L1.4 6.8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+
+<main>
+
+<header class="top">
+  <div>
+    <a class="back" href="../">← Science</a>
+    <h1><span class="en">Pressure &amp; Moments</span><span class="vi">Áp suất &amp; Mômen lực</span></h1>
+    <ul class="key" aria-label="Colour code">
+      <li><b class="c-f">F</b><span class="en">force</span><span class="vi">lực</span></li>
+      <li><b class="c-a">A</b><span class="en">area</span><span class="vi">diện tích</span></li>
+      <li><b class="c-d">d</b><span class="en">distance</span><span class="vi">khoảng cách</span></li>
+      <li><b class="c-out">P · M</b><span class="en">answer</span><span class="vi">kết quả</span></li>
+    </ul>
+  </div>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" id="btn-en" data-lang="en" aria-pressed="true">EN</button>
+    <button type="button" id="btn-vi" data-lang="vi" aria-pressed="false">VI</button>
+  </div>
+</header>
+
+<section class="pick" aria-labelledby="pick-h">
+  <h2 id="pick-h" class="pick-q"><span class="en">What is the question about?</span><span class="vi">Đề hỏi về cái gì?</span></h2>
+  <div class="pick-row">
+    <a class="pick-card" href="#pressure">
+      <svg viewBox="0 0 120 76" aria-hidden="true">
+        <rect x="8" y="56" width="104" height="14" rx="3" fill="var(--sponge)"/>
+        <rect x="38" y="32" width="44" height="24" rx="2" fill="var(--block)" stroke="currentColor" stroke-width="1.5"/>
+        <line x1="38" y1="56" x2="82" y2="56" stroke="var(--a)" stroke-width="4" stroke-linecap="round"/>
+        <line x1="60" y1="4" x2="60" y2="20" stroke="var(--f)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M52 18 L60 29 L68 18 Z" fill="var(--f)"/>
+      </svg>
+      <span class="what"><span class="en">Something presses on a surface</span><span class="vi">Vật ép lên một mặt</span></span>
+      <strong class="eq"><span class="c-out">P</span> = <span class="c-f">F</span> ÷ <span class="c-a">A</span></strong>
+    </a>
+    <a class="pick-card" href="#moments">
+      <svg viewBox="0 0 120 76" aria-hidden="true">
+        <path d="M60 44 L47 70 L73 70 Z" fill="currentColor"/>
+        <line x1="10" y1="50" x2="110" y2="38" stroke="var(--block)" stroke-width="6" stroke-linecap="round"/>
+        <line x1="20" y1="50" x2="20" y2="66" stroke="var(--f)" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M14 63 L20 72 L26 63 Z" fill="var(--f)"/>
+        <line x1="100" y1="40" x2="100" y2="56" stroke="var(--f)" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M94 53 L100 62 L106 53 Z" fill="var(--f)"/>
+        <line x1="60" y1="30" x2="100" y2="25" stroke="var(--d)" stroke-width="3" stroke-linecap="round"/>
+        <svg x="4" y="6" width="22" height="22" viewBox="0 0 24 24" style="color:var(--out)"><use href="#ccw"/></svg>
+        <svg x="92" y="0" width="22" height="22" viewBox="0 0 24 24" style="color:var(--out)"><use href="#cw"/></svg>
+      </svg>
+      <span class="what"><span class="en">Something turns about a pivot</span><span class="vi">Vật quay quanh điểm tựa</span></span>
+      <strong class="eq"><span class="c-out">M</span> = <span class="c-f">F</span> × <span class="c-d">d</span></strong>
+    </a>
+  </div>
+</section>
+
+<!-- ============ 1. PRESSURE ============ -->
+<section id="pressure" class="topic" aria-labelledby="h-p">
+  <div class="topic-head">
+    <span class="n">1</span>
+    <h2 id="h-p"><span class="en">Pressure on solids</span><span class="vi">Áp suất chất rắn</span></h2>
+  </div>
+
+  <div class="formula-row">
+    <div class="formula" role="img" aria-label="P equals F divided by A">
+      <span class="c-out">P</span><span class="op">=</span>
+      <span class="frac"><span class="c-f">F</span><span class="bar"></span><span class="c-a">A</span></span>
+    </div>
+    <dl class="legend">
+      <div><dt class="c-out">P</dt><dd><span class="en">pressure</span><span class="vi">áp suất</span></dd><dd class="unit">Pa = N/m²</dd></div>
+      <div><dt class="c-f">F</dt><dd><span class="en">force (= weight)</span><span class="vi">lực ép (= trọng lượng)</span></dd><dd class="unit">N</dd></div>
+      <div><dt class="c-a">A</dt><dd><span class="en">area touching</span><span class="vi">diện tích bị ép</span></dd><dd class="unit">m²</dd></div>
+    </dl>
+  </div>
+
+  <div class="lab">
+    <figure>
+      <svg id="brick-svg" viewBox="0 0 520 300" role="img" aria-label="A 2 kg brick on a sponge. Turning it so a smaller face touches makes it sink deeper."></svg>
+      <figcaption><span class="en">Same brick, same <b class="c-f">F</b>. Smaller <b class="c-a">A</b> → sinks deeper.</span><span class="vi">Cùng viên gạch, cùng <b class="c-f">F</b>. <b class="c-a">A</b> nhỏ hơn → lún sâu hơn.</span></figcaption>
+    </figure>
+    <div class="lab-side">
+      <div class="seg" role="group" aria-label="Which face is down">
+        <button type="button" id="o-flat" data-o="flat" aria-pressed="true"><svg viewBox="0 0 50 44" aria-hidden="true"></svg><span class="en">flat</span><span class="vi">nằm</span></button>
+        <button type="button" id="o-side" data-o="side" aria-pressed="false"><svg viewBox="0 0 50 44" aria-hidden="true"></svg><span class="en">side</span><span class="vi">nghiêng</span></button>
+        <button type="button" id="o-end" data-o="end" aria-pressed="false"><svg viewBox="0 0 50 44" aria-hidden="true"></svg><span class="en">end</span><span class="vi">đứng</span></button>
+      </div>
+      <svg id="foot" viewBox="0 0 150 70" role="img" aria-label="The face touching the sponge"></svg>
+      <div class="read" aria-live="polite">
+        <div class="r"><b class="c-f">F</b> = 20 N <small>(2 kg × 10)</small></div>
+        <div class="r"><b class="c-a">A</b> = <span id="rDims">20 × 10</span> = <span id="rCm">200</span> cm² = <b id="rA">0.02</b> m²</div>
+        <div class="r big"><b class="c-out" style="font-size:inherit;font-family:inherit">P</b> = 20 ÷ <span id="rA2">0.02</span> = <b id="rP">1000</b> Pa</div>
+        <div class="meter" aria-hidden="true"><span id="meter"></span></div>
+      </div>
+      <p class="rule"><span class="c-a">A</span>↓ &nbsp;→&nbsp; <span class="c-out">P</span>↑</p>
+    </div>
+  </div>
+
+  <div class="flow-head">
+    <h3><span class="en">How to solve</span><span class="vi">Các bước làm</span></h3>
+    <span class="eg"><span class="en">e.g.</span><span class="vi">VD:</span> <b>2 kg</b> <span class="en">brick, base</span><span class="vi">gạch, đáy</span> <b>20 cm × 10 cm</b></span>
+  </div>
+  <ol class="flow">
+    <li class="step s-f">
+      <span class="top-l"><span class="badge">1</span><span class="en">Find F</span><span class="vi">Tìm F</span></span>
+      <span class="do">kg × 10 = <span class="c-f">N</span></span>
+      <span class="ex">2 × 10 = <b>20 N</b></span>
+    </li>
+    <li class="step s-a">
+      <span class="top-l"><span class="badge">2</span><span class="en">Find A</span><span class="vi">Tìm A</span></span>
+      <span class="do"><span class="en">length × width</span><span class="vi">dài × rộng</span> → <span class="c-a">m²</span></span>
+      <span class="ex">0.2 × 0.1 = <b>0.02 m²</b></span>
+    </li>
+    <li class="step s-out">
+      <span class="top-l"><span class="badge">3</span><span class="en">Divide</span><span class="vi">Chia</span></span>
+      <span class="do"><span class="c-out">P</span> = <span class="c-f">F</span> ÷ <span class="c-a">A</span></span>
+      <span class="ex">20 ÷ 0.02</span>
+    </li>
+    <li class="step s-out">
+      <span class="top-l"><span class="badge">4</span><span class="en">Unit</span><span class="vi">Đơn vị</span></span>
+      <span class="do">Pa</span>
+      <span class="ex">= <b>1000 Pa</b></span>
+    </li>
+  </ol>
+
+  <ul class="traps">
+    <li><span class="bang">!</span>cm → m: ÷ 100 &nbsp;·&nbsp; cm² → m²: ÷ 10 000</li>
+    <li><span class="bang">!</span><span class="en">A = only the face that touches</span><span class="vi">A = chỉ mặt chạm vào</span></li>
+    <li><span class="bang">!</span><span class="en">mass (kg) is not force (N)</span><span class="vi">khối lượng (kg) không phải lực (N)</span></li>
+  </ul>
+
+  <div class="life">
+    <div class="life-col" style="border-left-color:var(--out)">
+      <h4><span class="c-a">A</span> <span class="en">small</span><span class="vi">nhỏ</span> → <span class="c-out">P</span> <span class="en">big</span><span class="vi">lớn</span></h4>
+      <ul>
+        <li><svg viewBox="0 0 52 40" aria-hidden="true"><path d="M4 26 L30 14 L30 27 Z" fill="var(--block)" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><rect x="30" y="13" width="18" height="15" rx="4" fill="currentColor"/><line x1="5" y1="26.5" x2="30" y2="27.5" stroke="var(--a)" stroke-width="2.5" stroke-linecap="round"/></svg><span class="en">knife</span><span class="vi">dao</span></li>
+        <li><svg viewBox="0 0 52 40" aria-hidden="true"><rect x="16" y="3" width="20" height="5" rx="1.5" fill="currentColor"/><rect x="23" y="8" width="6" height="22" fill="var(--block)" stroke="currentColor" stroke-width="1.2"/><path d="M23 30 L29 30 L26 38 Z" fill="var(--block)" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="26" cy="38" r="2.2" fill="var(--a)"/></svg><span class="en">nail</span><span class="vi">đinh</span></li>
+        <li><svg viewBox="0 0 52 40" aria-hidden="true"><path d="M8 10 C20 6 34 8 40 16 L44 20 L44 24 L36 24 L32 18 C24 20 16 20 8 18 Z" fill="var(--block)" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><rect x="40" y="24" width="4" height="12" fill="currentColor"/><line x1="40" y1="36.5" x2="44" y2="36.5" stroke="var(--a)" stroke-width="3" stroke-linecap="round"/></svg><span class="en">high heel</span><span class="vi">giày cao gót</span></li>
+      </ul>
+    </div>
+    <div class="life-col" style="border-left-color:var(--a)">
+      <h4><span class="c-a">A</span> <span class="en">big</span><span class="vi">lớn</span> → <span class="c-out">P</span> <span class="en">small</span><span class="vi">nhỏ</span></h4>
+      <ul>
+        <li><svg viewBox="0 0 52 40" aria-hidden="true"><ellipse cx="26" cy="20" rx="22" ry="11" fill="color-mix(in srgb,var(--a) 22%,transparent)" stroke="var(--a)" stroke-width="2.5"/><line x1="10" y1="20" x2="42" y2="20" stroke="currentColor" stroke-width="1.2"/><line x1="18" y1="12" x2="18" y2="28" stroke="currentColor" stroke-width="1.2"/><line x1="26" y1="9" x2="26" y2="31" stroke="currentColor" stroke-width="1.2"/><line x1="34" y1="12" x2="34" y2="28" stroke="currentColor" stroke-width="1.2"/></svg><span class="en">snowshoes</span><span class="vi">giày đi tuyết</span></li>
+        <li><svg viewBox="0 0 52 40" aria-hidden="true"><rect x="4" y="14" width="44" height="20" rx="10" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="14" cy="24" r="5" fill="var(--block)"/><circle cx="26" cy="24" r="5" fill="var(--block)"/><circle cx="38" cy="24" r="5" fill="var(--block)"/><line x1="12" y1="35.5" x2="40" y2="35.5" stroke="var(--a)" stroke-width="3" stroke-linecap="round"/></svg><span class="en">tractor tracks</span><span class="vi">bánh xích</span></li>
+        <li><svg viewBox="0 0 52 40" aria-hidden="true"><rect x="12" y="6" width="28" height="30" rx="7" fill="var(--block)" stroke="currentColor" stroke-width="1.5"/><path d="M18 6 C18 1 34 1 34 6" fill="none" stroke="currentColor" stroke-width="2"/><rect x="15" y="10" width="7" height="24" rx="3" fill="color-mix(in srgb,var(--a) 40%,transparent)" stroke="var(--a)" stroke-width="2"/><rect x="30" y="10" width="7" height="24" rx="3" fill="color-mix(in srgb,var(--a) 40%,transparent)" stroke="var(--a)" stroke-width="2"/></svg><span class="en">wide straps</span><span class="vi">quai balo to</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. MOMENTS ============ -->
+<section id="moments" class="topic" aria-labelledby="h-m">
+  <div class="topic-head">
+    <span class="n">2</span>
+    <h2 id="h-m"><span class="en">Moments: the seesaw</span><span class="vi">Mômen lực: cái bập bênh</span></h2>
+  </div>
+
+  <div class="formula-row">
+    <div class="formula" role="img" aria-label="M equals F times d">
+      <span class="c-out">M</span><span class="op">=</span><span class="c-f">F</span><span class="op">×</span><span class="c-d">d</span>
+    </div>
+    <dl class="legend">
+      <div><dt class="c-out">M</dt><dd><span class="en">moment (turning effect)</span><span class="vi">mômen (tác dụng làm quay)</span></dd><dd class="unit">N m</dd></div>
+      <div><dt class="c-f">F</dt><dd><span class="en">force</span><span class="vi">lực</span></dd><dd class="unit">N</dd></div>
+      <div><dt class="c-d">d</dt><dd><span class="en">distance to the pivot ▲</span><span class="vi">khoảng cách tới điểm tựa ▲</span></dd><dd class="unit">m</dd></div>
+    </dl>
+  </div>
+
+  <div class="law" role="img" aria-label="Balanced when total anticlockwise moment equals total clockwise moment">
+    <span class="tag"><span class="en">Balanced when</span><span class="vi">Thăng bằng khi</span></span>
+    <div class="law-eq">
+      <span class="side"><span class="sig">Σ<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ccw"/></svg></span><small class="en">anticlockwise</small><small class="vi">ngược chiều kim đồng hồ</small></span>
+      <span class="op">=</span>
+      <span class="side"><span class="sig">Σ<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#cw"/></svg></span><small class="en">clockwise</small><small class="vi">cùng chiều kim đồng hồ</small></span>
+    </div>
+    <span class="eq2"><span class="c-f">F<sub>1</sub></span> × <span class="c-d">d<sub>1</sub></span> = <span class="c-f">F<sub>2</sub></span> × <span class="c-d">d<sub>2</sub></span></span>
+  </div>
+
+  <div class="lab wide" id="seesaw-lab">
+    <figure>
+      <svg id="seesaw-svg" viewBox="0 0 640 320" role="img" aria-label="Seesaw with two children. The side with the bigger moment goes down."></svg>
+      <figcaption><span class="en">Move the sliders. <b class="c-d">Green</b> = d, always measured from the pivot ▲.</span><span class="vi">Kéo thanh trượt. <b class="c-d">Xanh lá</b> = d, luôn đo từ điểm tựa ▲.</span></figcaption>
+    </figure>
+    <div class="ctrl">
+      <fieldset>
+        <legend>An <span class="en">(left)</span><span class="vi">(trái)</span></legend>
+        <label for="lF"><b class="c-f">F</b> = <output id="lFv" for="lF">600</output> N</label>
+        <input class="rF" type="range" id="lF" min="100" max="800" step="50" value="600">
+        <label for="ld"><b class="c-d">d</b> = <output id="ldv" for="ld">1.0</output> m</label>
+        <input class="rd" type="range" id="ld" min="0.5" max="2.5" step="0.1" value="1.0">
+      </fieldset>
+      <fieldset>
+        <legend>Bình <span class="en">(right)</span><span class="vi">(phải)</span></legend>
+        <label for="rF"><b class="c-f">F</b> = <output id="rFv" for="rF">300</output> N</label>
+        <input class="rF" type="range" id="rF" min="100" max="800" step="50" value="300">
+        <label for="rd"><b class="c-d">d</b> = <output id="rdv" for="rd">2.0</output> m</label>
+        <input class="rd" type="range" id="rd" min="0.5" max="2.5" step="0.1" value="2.0">
+      </fieldset>
+    </div>
+    <div class="eqrow" aria-live="polite">
+      <div class="mside"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ccw"/></svg><span id="lEq">600 × 1.0</span> = <b id="lM">600</b> N m</div>
+      <div class="cmp" id="cmp">=</div>
+      <div class="mside"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#cw"/></svg><span id="rEq">300 × 2.0</span> = <b id="rM">600</b> N m</div>
+    </div>
+    <p class="status ok" id="status"><span class="en" id="st-en">Balanced</span><span class="vi" id="st-vi">Thăng bằng</span></p>
+  </div>
+
+  <div class="flow-head">
+    <h3><span class="en">How to solve</span><span class="vi">Các bước làm</span></h3>
+    <span class="eg"><span class="en">e.g.</span><span class="vi">VD:</span> An <b>500 N</b>, <b>1.2 m</b> · Bình <b>400 N</b>, d = <b>?</b></span>
+  </div>
+  <ol class="flow">
+    <li class="step s-ink">
+      <span class="top-l"><span class="badge">1</span><span class="en">Find the pivot</span><span class="vi">Tìm điểm tựa</span></span>
+      <span class="do">▲</span>
+      <span class="ex"><span class="en">the middle</span><span class="vi">ở giữa</span></span>
+    </li>
+    <li class="step s-out">
+      <span class="top-l"><span class="badge">2</span><span class="en">Which way?</span><span class="vi">Quay chiều nào?</span></span>
+      <span class="do" style="display:flex;gap:10px;align-items:center"><svg viewBox="0 0 24 24" width="34" aria-hidden="true" style="color:var(--out)"><use href="#ccw"/></svg> / <svg viewBox="0 0 24 24" width="34" aria-hidden="true" style="color:var(--out)"><use href="#cw"/></svg></span>
+      <span class="ex">An <b>↺</b> · Bình <b>↻</b></span>
+    </li>
+    <li class="step s-d">
+      <span class="top-l"><span class="badge">3</span><span class="en">Multiply</span><span class="vi">Nhân</span></span>
+      <span class="do"><span class="c-f">F</span> × <span class="c-d">d</span></span>
+      <span class="ex">500 × 1.2 = <b>600</b><br>400 × <b>d</b></span>
+    </li>
+    <li class="step s-out">
+      <span class="top-l"><span class="badge">4</span><span class="en">Set equal, solve</span><span class="vi">Cho bằng nhau, giải</span></span>
+      <span class="do">Σ↺ = Σ↻</span>
+      <span class="ex">600 = 400 × d<br>d = 600 ÷ 400 = <b>1.5 m</b></span>
+      <button type="button" class="try" id="try-ex"><span class="en">Check on the seesaw</span><span class="vi">Thử trên bập bênh</span></button>
+    </li>
+  </ol>
+
+  <ul class="traps">
+    <li><span class="bang">!</span><span class="en">d from the pivot, not from the end</span><span class="vi">d tính từ điểm tựa, không phải từ đầu ván</span></li>
+    <li><span class="bang">!</span><span class="en">many forces → add up each side</span><span class="vi">nhiều lực → cộng từng bên</span></li>
+    <li><span class="bang">!</span><span class="en">not equal → bigger side goes down</span><span class="vi">không bằng → bên lớn hơn chìm xuống</span></li>
+  </ul>
+</section>
+
+<footer>
+  <span>g = 10 N/kg</span>
+  <span>1 Pa = 1 N/m²</span>
+  <span>1 m² = 10 000 cm²</span>
+  <span>M: N m</span>
+</footer>
+
+</main>
+
+<script>
+(function(){
+  const $ = (id) => document.getElementById(id);
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent){
+    const e = document.createElementNS(NS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  const f1 = (v) => (Math.round(v * 10) / 10).toFixed(1);
+  const pts = (arr) => arr.map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+
+  /* ---------- language ---------- */
+  function setLang(l){
+    document.documentElement.lang = l;
+    $("btn-en").setAttribute("aria-pressed", l === "en");
+    $("btn-vi").setAttribute("aria-pressed", l === "vi");
+    try { localStorage.setItem("pm-lang", l); } catch (e) {}
+  }
+  let saved = null;
+  try { saved = localStorage.getItem("pm-lang"); } catch (e) {}
+  setLang(saved === "vi" ? "vi" : "en");
+  $("btn-en").addEventListener("click", () => setLang("en"));
+  $("btn-vi").addEventListener("click", () => setLang("vi"));
+
+  /* ---------- brick on sponge (oblique 3D) ---------- */
+  const KX = 0.42, KY = 0.26;
+  const pr = (x, y, z) => [x + z * KX, y - z * KY];
+  const ORI = {               // cm: W across, H up, D into the page
+    flat: { W: 20, H: 5,  D: 10 },
+    side: { W: 20, H: 10, D: 5 },
+    end:  { W: 10, H: 20, D: 5 }
+  };
+  function faces(x0, yb, z0, W, H, D){
+    const x1 = x0 + W, yt = yb - H, z1 = z0 + D;
+    return {
+      front: [pr(x0,yt,z0), pr(x1,yt,z0), pr(x1,yb,z0), pr(x0,yb,z0)],
+      top:   [pr(x0,yt,z0), pr(x1,yt,z0), pr(x1,yt,z1), pr(x0,yt,z1)],
+      right: [pr(x1,yt,z0), pr(x1,yt,z1), pr(x1,yb,z1), pr(x1,yb,z0)]
+    };
+  }
+  function drawBox(g, f){
+    el("polygon", { points: pts(f.front), class: "bf-front" }, g);
+    el("polygon", { points: pts(f.top),   class: "bf-top" }, g);
+    el("polygon", { points: pts(f.right), class: "bf-right" }, g);
+  }
+
+  // little icons on the three buttons
+  document.querySelectorAll(".seg button").forEach(b => {
+    const o = ORI[b.dataset.o], s = 1.3, svg = b.querySelector("svg");
+    const W = o.W * s, H = o.H * s, D = o.D * s;
+    const x0 = (50 - (W + D * KX)) / 2, yb = 40;
+    drawBox(svg, faces(x0, yb, 0, W, H, D));
+    el("line", { x1: x0, y1: yb, x2: x0 + W, y2: yb, class: "rim", "stroke-width": 2.5 }, svg);
+  });
+
+  function renderBrick(key){
+    const o = ORI[key], S = 8;
+    const W = o.W * S, H = o.H * S, D = o.D * S;
+    const Acm = o.W * o.D, Am2 = Acm / 10000, P = 20 / Am2;
+    const sink = P / 1000 * 4.5;
+    const SX0 = 60, SX1 = 440, SZ = 140, SY = 232, ST = 46;
+    const svg = $("brick-svg");
+    svg.innerHTML = "";
+
+    // sponge back + top
+    el("polygon", { points: pts([pr(SX0,SY,0), pr(SX1,SY,0), pr(SX1,SY,SZ), pr(SX0,SY,SZ)]), class: "sp-top" }, svg);
+    el("polygon", { points: pts([pr(SX1,SY,0), pr(SX1,SY,SZ), pr(SX1,SY+ST,SZ), pr(SX1,SY+ST,0)]), class: "sp-right" }, svg);
+
+    const x0 = (SX0 + SX1) / 2 - W / 2, z0 = (SZ - D) / 2, x1 = x0 + W, z1 = z0 + D;
+    // squashed patch around the brick: darker when pressure is bigger
+    const pad = 5 + sink * 1.1;
+    el("polygon", {
+      points: pts([pr(x0-pad,SY,z0-pad), pr(x1+pad,SY,z0-pad), pr(x1+pad,SY,z1+pad), pr(x0-pad,SY,z1+pad)]),
+      class: "dent", style: "opacity:" + (0.06 + sink * 0.012).toFixed(3)
+    }, svg);
+
+    // clip so the sunk part of the brick disappears into the sponge
+    const fr0 = pr(x0,SY,z0), fr1 = pr(x1,SY,z0), bk1 = pr(x1,SY,z1);
+    const defs = el("defs", {}, svg);
+    const cp = el("clipPath", { id: "bclip" }, defs);
+    el("polygon", { points: pts([[0,0],[520,0],[520,bk1[1]], bk1, fr1, fr0, [0,fr0[1]]]) }, cp);
+    const g = el("g", { "clip-path": "url(#bclip)" }, svg);
+    drawBox(g, faces(x0, SY + sink, z0, W, H, D));
+    el("polyline", { points: pts([fr0, fr1, bk1]), class: "rim" }, svg);
+
+    // sponge front with holes
+    el("rect", { x: SX0, y: SY, width: SX1 - SX0, height: ST, class: "sp-front" }, svg);
+    for (let i = 0; i < 46; i++){
+      el("circle", { cx: SX0 + 8 + ((i * 53) % 364), cy: SY + 8 + ((i * 29) % 31), r: 1.6 + (i % 3) * 0.9, class: "sp-dot" }, svg);
+    }
+
+    // weight arrow
+    const tc = pr(x0 + W / 2, SY + sink - H, z0 + D / 2);
+    el("line", { x1: tc[0], y1: tc[1] - 62, x2: tc[0], y2: tc[1] - 16, class: "fa" }, svg);
+    el("polygon", { points: pts([[tc[0]-9, tc[1]-20], [tc[0]+9, tc[1]-20], [tc[0], tc[1]-5]]), class: "fh" }, svg);
+    const t = el("text", { x: tc[0] + 14, y: tc[1] - 38, class: "ft" }, svg);
+    t.textContent = "F = 20 N";
+
+    // footprint (the face that touches)
+    const fs = $("foot"); fs.innerHTML = "";
+    const k = 3, fw = o.W * k, fd = o.D * k, fx = 60 - fw / 2, fy = 34 - fd / 2;
+    el("rect", { x: fx, y: fy, width: fw, height: fd, rx: 2, class: "foot-a" }, fs);
+    const tA = el("text", { x: 60, y: fy + fd / 2 + 6, class: "foot-A" }, fs); tA.textContent = fd >= 20 ? "A" : "";
+    const tw = el("text", { x: 60, y: fy + fd + 14, class: "foot-t" }, fs); tw.textContent = o.W + " cm";
+    const td = el("text", { x: fx + fw + 6, y: 38, class: "foot-t", "text-anchor": "start" }, fs); td.textContent = o.D + " cm";
+    if (fd < 20){ const ta2 = el("text", { x: fx - 12, y: 40, class: "foot-A" }, fs); ta2.textContent = "A"; }
+
+    // numbers
+    $("rDims").textContent = o.W + " × " + o.D;
+    $("rCm").textContent = Acm;
+    $("rA").textContent = Am2;
+    $("rA2").textContent = Am2;
+    $("rP").textContent = P;
+    $("meter").style.width = (P / 4000 * 100) + "%";
+    document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.o === key));
+  }
+  document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => renderBrick(b.dataset.o)));
+  renderBrick("flat");
+
+  /* ---------- seesaw ---------- */
+  const ids = ["lF", "ld", "rF", "rd"];
+  function val(id){ return parseFloat($(id).value); }
+
+  function kid(svg, p, F, name){
+    const k = 0.55 + F / 1000, bw = 26 * k, bh = 32 * k, hr = 10 * k;
+    const g = el("g", {}, svg);
+    el("rect", { x: p[0] - bw / 2, y: p[1] - bh, width: bw, height: bh, rx: 8 * k, class: "kbody" }, g);
+    el("circle", { cx: p[0], cy: p[1] - bh - hr - 1.5, r: hr, class: "khead" }, g);
+    const t = el("text", { x: p[0], y: p[1] - bh - 2 * hr - 8, class: "kname" }, g);
+    t.textContent = name;
+  }
+  function farrow(svg, p, F, side){
+    const L = 22 + F * 0.07;
+    el("line", { x1: p[0], y1: p[1], x2: p[0], y2: p[1] + L - 8, class: "fa" }, svg);
+    el("polygon", { points: pts([[p[0]-8, p[1]+L-12], [p[0]+8, p[1]+L-12], [p[0], p[1]+L+2]]), class: "fh" }, svg);
+    const t = el("text", { x: p[0] + side * 12, y: p[1] + L * 0.62, class: "ft", "text-anchor": side < 0 ? "end" : "start" }, svg);
+    t.textContent = F + " N";
+  }
+  function dline(svg, at, s1, label){
+    const a = at(0, -28), b = at(s1, -28);
+    el("line", { x1: a[0], y1: a[1], x2: b[0], y2: b[1], class: "dl" }, svg);
+    [0, s1].forEach(s => { const u = at(s, -21), v = at(s, -35); el("line", { x1: u[0], y1: u[1], x2: v[0], y2: v[1], class: "dl" }, svg); });
+    // label sits mid-line, but never on top of the pivot (short d, big phone font)
+    const t = el("text", { x: 0, y: 0, class: "dt" }, svg);
+    t.textContent = "d = " + label + " m";
+    let w = 70;
+    try { w = t.getComputedTextLength() || w; } catch (e) {}
+    const sign = s1 < 0 ? -1 : 1;
+    const sLab = sign * Math.max(Math.abs(s1) / 2, (16 + w / 2) / 100);
+    const m = at(sLab, -46);
+    t.setAttribute("x", m[0].toFixed(1));
+    t.setAttribute("y", (m[1] + 4).toFixed(1));
+  }
+
+  function renderSeesaw(){
+    const lF = val("lF"), ld = val("ld"), rF = val("rF"), rd = val("rd");
+    $("lFv").textContent = lF; $("ldv").textContent = f1(ld);
+    $("rFv").textContent = rF; $("rdv").textContent = f1(rd);
+
+    const ccw = Math.round(lF * ld), cw = Math.round(rF * rd), diff = cw - ccw;
+    const ang = 9 * Math.tanh(diff / 220) * Math.PI / 180;   // + = clockwise = right side down
+    const ux = Math.cos(ang), uy = Math.sin(ang), nx = uy, ny = -ux;
+    const CX = 320, CY = 168, PX = 100, HALF = 2.75;
+    const at = (s, off) => [CX + s * PX * ux + off * nx, CY + s * PX * uy + off * ny];
+
+    const svg = $("seesaw-svg");
+    svg.innerHTML = "";
+    el("line", { x1: 24, y1: 292, x2: 616, y2: 292, class: "ground" }, svg);
+    el("polygon", { points: "320,174 287,292 353,292", class: "pivot" }, svg);
+    const a = at(-HALF, 0), b = at(HALF, 0);
+    el("line", { x1: a[0], y1: a[1], x2: b[0], y2: b[1], class: "beam" }, svg);
+    el("circle", { cx: CX, cy: CY, r: 3.5, class: "pdot" }, svg);
+
+    kid(svg, at(-ld, 7), lF, "An");
+    kid(svg, at(rd, 7), rF, "Bình");
+    dline(svg, at, -ld, f1(ld));
+    dline(svg, at, rd, f1(rd));
+    farrow(svg, at(-ld, -7), lF, -1);
+    farrow(svg, at(rd, -7), rF, 1);
+
+    $("lEq").textContent = lF + " × " + f1(ld);
+    $("rEq").textContent = rF + " × " + f1(rd);
+    $("lM").textContent = ccw;
+    $("rM").textContent = cw;
+    $("cmp").textContent = diff === 0 ? "=" : (ccw > cw ? ">" : "<");
+    const st = $("status");
+    st.classList.toggle("ok", diff === 0);
+    if (diff === 0){ $("st-en").textContent = "Balanced"; $("st-vi").textContent = "Thăng bằng"; }
+    else if (ccw > cw){ $("st-en").textContent = "Left side goes down"; $("st-vi").textContent = "Bên trái chìm xuống"; }
+    else { $("st-en").textContent = "Right side goes down"; $("st-vi").textContent = "Bên phải chìm xuống"; }
+  }
+  ids.forEach(id => $(id).addEventListener("input", renderSeesaw));
+  renderSeesaw();
+  // re-place labels once the web font has loaded (text width changes)
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(renderSeesaw);
+  let rz;
+  window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(renderSeesaw, 150); });
+
+  $("try-ex").addEventListener("click", () => {
+    $("lF").value = 500; $("ld").value = 1.2; $("rF").value = 400; $("rd").value = 1.5;
+    renderSeesaw();
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    $("seesaw-lab").scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "center" });
+  });
+})();
+</script>
+</body>
+</html>

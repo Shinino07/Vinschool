@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Science lessons</title>
+<meta name="description" content="Science lessons in pictures: pressure, moments and more.">
+<meta property="og:title" content="Science lessons · Bài học Science">
+<meta property="og:description" content="Science lessons in pictures, in English and Vietnamese.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 15 L9 29 L23 29 Z' fill='%2317202c'/%3E%3Crect x='2' y='10' width='28' height='4.5' rx='2.2' fill='%237a3cd0'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: graph-paper workbook, one card per lesson, newest at the bottom. */
+  --paper:#f2f5f9; --grid:#e0e6ee; --card:#ffffff; --ink:#17202c; --muted:#5b6778; --line:#cdd6e1;
+  --f:#d63d27; --a:#2160d4; --d:#11875a; --out:#7a3cd0;
+  --display:"Baloo 2","Trebuchet MS",system-ui,sans-serif;
+  --body:"Lexend","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#10151c; --grid:#19212b; --card:#17202a; --ink:#e6ecf4; --muted:#9aa7b8; --line:#2c3746;
+    --f:#ff7458; --a:#6b9fff; --d:#3ccf90; --out:#b58aff;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:var(--body); color:var(--ink); line-height:1.45;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+main{max-width:760px; margin:0 auto; padding:44px 20px 56px; display:grid; gap:26px}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(2.4rem,7vw,3.4rem); line-height:1; margin:0}
+.sub{margin:6px 0 0; color:var(--muted)}
+.lessons{list-style:none; margin:0; padding:0; display:grid; gap:14px}
+.lessons a{display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:6px 16px; padding:16px 18px; background:var(--card); border:2px solid var(--line); border-radius:14px; color:inherit; text-decoration:none; transition:border-color .15s}
+.lessons a:hover{border-color:var(--ink)}
+.lessons a:focus-visible{outline:3px solid var(--a); outline-offset:2px}
+.n{display:grid; place-items:center; width:42px; height:42px; border-radius:50%; background:var(--ink); color:var(--paper); font-family:var(--display); font-weight:800; font-size:1.4rem}
+.t{display:block; font-family:var(--display); font-weight:800; font-size:1.45rem; line-height:1.1}
+.vi{display:block; color:var(--muted); font-size:.95rem}
+.eq{font-family:var(--display); font-weight:800; font-size:1.2rem; white-space:nowrap}
+.c-f{color:var(--f)} .c-a{color:var(--a)} .c-d{color:var(--d)} .c-out{color:var(--out)}
+@media (max-width:560px){
+  .lessons a{grid-template-columns:auto 1fr}
+  .eq{grid-column:2; white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Science</h1>
+    <p class="sub">Lessons in pictures · Bài học bằng hình</p>
+  </header>
+  <ol class="lessons">
+    <li>
+      <a href="pressure-moments/">
+        <span class="n">1</span>
+        <span><span class="t">Pressure &amp; Moments</span><span class="vi">Áp suất &amp; Mômen lực</span></span>
+        <span class="eq"><span class="c-out">P</span> = <span class="c-f">F</span> ÷ <span class="c-a">A</span> &nbsp;·&nbsp; <span class="c-out">M</span> = <span class="c-f">F</span> × <span class="c-d">d</span></span>
+      </a>
+    </li>
+  </ol>
+</main>
+</body>
+</html>
