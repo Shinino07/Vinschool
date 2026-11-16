@@ -614,27 +614,41 @@ footer{color:var(--muted); font-size:.9rem; font-variant-numeric:tabular-nums; d
     const t = el("text", { x: p[0], y: p[1] - bh - 2 * hr - 8, class: "kname" }, g);
     t.textContent = name;
   }
+  const narrow = () => window.matchMedia("(max-width:600px)").matches;
+  const textW = (t, dflt) => { try { return t.getComputedTextLength() || dflt; } catch (e) { return dflt; } };
+
   function farrow(svg, p, F, side){
     const L = 22 + F * 0.07;
     el("line", { x1: p[0], y1: p[1], x2: p[0], y2: p[1] + L - 8, class: "fa" }, svg);
     el("polygon", { points: pts([[p[0]-8, p[1]+L-12], [p[0]+8, p[1]+L-12], [p[0], p[1]+L+2]]), class: "fh" }, svg);
-    const t = el("text", { x: p[0] + side * 12, y: p[1] + L * 0.62, class: "ft", "text-anchor": side < 0 ? "end" : "start" }, svg);
+    const t = el("text", { x: 0, y: (p[1] + L * 0.62).toFixed(1), class: "ft" }, svg);
     t.textContent = F + " N";
+    // label goes on the outer side of the arrow; flip inward if it would run off the drawing
+    const w = textW(t, 40);
+    let s = side;
+    const edge = p[0] + s * (12 + w);
+    if (edge < 4 || edge > 636) s = -s;
+    t.setAttribute("x", (p[0] + s * 12).toFixed(1));
+    t.setAttribute("text-anchor", s < 0 ? "end" : "start");
   }
-  function dline(svg, at, s1, label){
+  // green dimension line from the pivot to the child; label stays between pivot and arrow
+  function dline(svg, at, s1, label, off){
     const a = at(0, -28), b = at(s1, -28);
     el("line", { x1: a[0], y1: a[1], x2: b[0], y2: b[1], class: "dl" }, svg);
     [0, s1].forEach(s => { const u = at(s, -21), v = at(s, -35); el("line", { x1: u[0], y1: u[1], x2: v[0], y2: v[1], class: "dl" }, svg); });
-    // label sits mid-line, but never on top of the pivot (short d, big phone font)
     const t = el("text", { x: 0, y: 0, class: "dt" }, svg);
-    t.textContent = "d = " + label + " m";
-    let w = 70;
-    try { w = t.getComputedTextLength() || w; } catch (e) {}
-    const sign = s1 < 0 ? -1 : 1;
-    const sLab = sign * Math.max(Math.abs(s1) / 2, (16 + w / 2) / 100);
-    const m = at(sLab, -46);
-    t.setAttribute("x", m[0].toFixed(1));
-    t.setAttribute("y", (m[1] + 4).toFixed(1));
+    t.textContent = (narrow() ? "" : "d = ") + label + " m";
+    const w = textW(t, 60), len = Math.abs(s1) * 100, sign = s1 < 0 ? -1 : 1;
+    let c = Math.max(len / 2, 14 + w / 2);   // keep off the pivot when there is room
+    c = Math.min(c, len - 10 - w / 2);       // never run into the child's force arrow
+    const place = (o) => {
+      const m = at(sign * c / 100, o);
+      t.setAttribute("x", m[0].toFixed(1));
+      t.setAttribute("y", (m[1] + 4).toFixed(1));
+      return [m[0] - w / 2, m[0] + w / 2];
+    };
+    const box = place(off);
+    return { box, place };
   }
 
   function renderSeesaw(){
@@ -658,8 +672,9 @@ footer{color:var(--muted); font-size:.9rem; font-variant-numeric:tabular-nums; d
 
     kid(svg, at(-ld, 7), lF, "An");
     kid(svg, at(rd, 7), rF, "Bình");
-    dline(svg, at, -ld, f1(ld));
-    dline(svg, at, rd, f1(rd));
+    const dL = dline(svg, at, -ld, f1(ld), -46);
+    const dR = dline(svg, at, rd, f1(rd), -46);
+    if (dL.box[1] + 6 > dR.box[0]) dR.place(-72);   // both d short: drop the right label one row
     farrow(svg, at(-ld, -7), lF, -1);
     farrow(svg, at(rd, -7), rF, 1);
 
